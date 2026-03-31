@@ -280,13 +280,14 @@ export default function Modal({ type: initialType, onClose, onSwitch, onSuccess 
       <form onSubmit={(e) => { e.preventDefault(); setLoading(true); setTimeout(() => { setLoading(false); succeed("Welcome back!", "Opening your dashboard…"); }, 1500); }} className="space-y-4">
         <InputField label="Email" name="email" type="email" value={form.email} onChange={setF} placeholder="you@example.com" />
         <InputField label="Password" name="password" type={showPw ? "text" : "password"} value={form.password} onChange={setF} placeholder="••••••••"
-          hint={
-            <div className="flex gap-3">
-              <button type="button" onClick={() => setShowPw(!showPw)} className="text-xs text-slate-500 hover:text-slate-300 transition">{showPw ? "Hide" : "Show"}</button>
-              <button type="button" onClick={() => setScreen("forgot-email")} className="text-xs text-violet-400 hover:text-violet-300 transition">Forgot password?</button>
-            </div>
-          }
-        />
+          hint={<button type="button" onClick={() => setShowPw(!showPw)} className="text-xs text-slate-500 hover:text-slate-300 transition">{showPw ? "Hide" : "Show"}</button>}>
+          <div className="flex justify-end mt-1.5">
+            <button type="button" onClick={() => setScreen("forgot-email")}
+              className="text-xs text-violet-400 hover:text-violet-300 font-semibold transition">
+              Forgot password?
+            </button>
+          </div>
+        </InputField>
         <PrimaryBtn loading={loading} disabled={gLoading} label="Sign In →" />
       </form>
       <SwitchLink question="Don't have an account?" action="Sign Up" onClick={() => { setScreen("signup"); onSwitch?.(); }} />
