@@ -10,22 +10,27 @@ const GoogleIcon = () => (
 );
 
 export default function Modal({ type, onClose, onSwitch, onSuccess }) {
-  const [form, setForm] = useState({ name: "", email: "", password: "" });
-  const [loading, setLoading] = useState(false);
+  const [form, setForm]               = useState({ name: "", email: "", password: "" });
+  const [loading, setLoading]         = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
-  const [done, setDone] = useState(false);
+  const [done, setDone]               = useState(false);
 
-  const handle = (e) =>
-    setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
+  const handle = (e) => setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
+
+  // Shared success handler — shows the celebration screen, then navigates
+  const succeed = () => {
+    setDone(true);
+    setTimeout(() => {
+      if (onSuccess) onSuccess();
+    }, 1200);
+  };
 
   const submit = (e) => {
     e.preventDefault();
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
-      setDone(true);
-      // Redirect to dashboard after short celebration
-      setTimeout(() => onSuccess?.(), 1200);
+      succeed();
     }, 1500);
   };
 
@@ -33,8 +38,7 @@ export default function Modal({ type, onClose, onSwitch, onSuccess }) {
     setGoogleLoading(true);
     setTimeout(() => {
       setGoogleLoading(false);
-      setDone(true);
-      setTimeout(() => onSuccess?.(), 1200);
+      succeed();
     }, 1800);
   };
 
@@ -56,13 +60,20 @@ export default function Modal({ type, onClose, onSwitch, onSuccess }) {
         />
 
         <div className="p-8">
+          {/* ── Success screen ── */}
           {done ? (
-            <div className="text-center py-8">
-              <div className="text-5xl mb-4">🎉</div>
+            <div className="text-center py-10">
+              <div className="text-6xl mb-4">🎉</div>
               <h3 className="text-2xl font-bold text-white mb-2">
                 {type === "login" ? "Welcome back!" : "You're in!"}
               </h3>
-              <p className="text-slate-400">Opening your dashboard…</p>
+              <p className="text-slate-400 text-sm">Opening your dashboard…</p>
+              <div className="mt-6 flex justify-center">
+                <svg className="animate-spin w-6 h-6" viewBox="0 0 24 24" fill="none">
+                  <circle className="opacity-20" cx="12" cy="12" r="10" stroke="#7c3aed" strokeWidth="4"/>
+                  <path className="opacity-80" fill="#7c3aed" d="M4 12a8 8 0 018-8v8z"/>
+                </svg>
+              </div>
             </div>
           ) : (
             <>
@@ -73,9 +84,7 @@ export default function Modal({ type, onClose, onSwitch, onSuccess }) {
                     {type === "login" ? "Sign In" : "Create Account"}
                   </h2>
                   <p className="text-slate-400 text-sm mt-1">
-                    {type === "login"
-                      ? "Access your AI workspace"
-                      : "Start creating for free"}
+                    {type === "login" ? "Access your AI workspace" : "Start creating for free"}
                   </p>
                 </div>
                 <button
@@ -119,7 +128,7 @@ export default function Modal({ type, onClose, onSwitch, onSuccess }) {
                 <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.08)" }} />
               </div>
 
-              {/* Email / Password Form */}
+              {/* Form */}
               <form onSubmit={submit} className="space-y-4">
                 {type === "signup" && (
                   <div>
@@ -133,10 +142,7 @@ export default function Modal({ type, onClose, onSwitch, onSuccess }) {
                       required
                       placeholder="Jane Doe"
                       className="w-full rounded-xl px-4 py-3 text-white placeholder-slate-600 outline-none focus:ring-2 focus:ring-violet-500 transition text-sm"
-                      style={{
-                        background: "rgba(255,255,255,0.05)",
-                        border: "1px solid rgba(255,255,255,0.1)",
-                      }}
+                      style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)" }}
                     />
                   </div>
                 )}
@@ -153,10 +159,7 @@ export default function Modal({ type, onClose, onSwitch, onSuccess }) {
                     required
                     placeholder="you@example.com"
                     className="w-full rounded-xl px-4 py-3 text-white placeholder-slate-600 outline-none focus:ring-2 focus:ring-violet-500 transition text-sm"
-                    style={{
-                      background: "rgba(255,255,255,0.05)",
-                      border: "1px solid rgba(255,255,255,0.1)",
-                    }}
+                    style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)" }}
                   />
                 </div>
 
@@ -166,10 +169,7 @@ export default function Modal({ type, onClose, onSwitch, onSuccess }) {
                       Password
                     </label>
                     {type === "login" && (
-                      <button
-                        type="button"
-                        className="text-xs text-violet-400 hover:text-violet-300 transition"
-                      >
+                      <button type="button" className="text-xs text-violet-400 hover:text-violet-300 transition">
                         Forgot password?
                       </button>
                     )}
@@ -182,10 +182,7 @@ export default function Modal({ type, onClose, onSwitch, onSuccess }) {
                     required
                     placeholder="••••••••"
                     className="w-full rounded-xl px-4 py-3 text-white placeholder-slate-600 outline-none focus:ring-2 focus:ring-violet-500 transition text-sm"
-                    style={{
-                      background: "rgba(255,255,255,0.05)",
-                      border: "1px solid rgba(255,255,255,0.1)",
-                    }}
+                    style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)" }}
                   />
                 </div>
 
@@ -204,9 +201,7 @@ export default function Modal({ type, onClose, onSwitch, onSuccess }) {
               </form>
 
               <p className="text-center text-slate-500 text-sm mt-5">
-                {type === "login"
-                  ? "Don't have an account?"
-                  : "Already have an account?"}{" "}
+                {type === "login" ? "Don't have an account?" : "Already have an account?"}{" "}
                 <button
                   onClick={onSwitch}
                   className="text-violet-400 hover:text-violet-300 font-semibold transition"

@@ -14,14 +14,34 @@ import TestimonialsSection from "./pages/TestimonialsSection";
 import PricingSection from "./pages/PricingSection";
 import CTABanner from "./pages/CTABanner";
 
+// Dashboard
+import Dashboard from "./pages/Dashboard";
+
 export default function App() {
-  const [modal, setModal] = useState(null); // "login" | "signup" | null
+  const [modal, setModal] = useState(null);   // "login" | "signup" | null
+  const [loggedIn, setLoggedIn] = useState(false);
 
   const openLogin  = () => setModal("login");
   const openSignup = () => setModal("signup");
   const closeModal = () => setModal(null);
   const switchModal = () => setModal((m) => (m === "login" ? "signup" : "login"));
 
+  // Called by Modal when auth succeeds
+  const handleAuthSuccess = () => {
+    setModal(null);
+    setLoggedIn(true);
+  };
+
+  const handleLogout = () => {
+    setLoggedIn(false);
+  };
+
+  // ── Dashboard view ────────────────────────────────────────
+  if (loggedIn) {
+    return <Dashboard onLogout={handleLogout} />;
+  }
+
+  // ── Landing page view ─────────────────────────────────────
   return (
     <>
       <Navbar onLogin={openLogin} onSignup={openSignup} />
@@ -39,7 +59,12 @@ export default function App() {
       <Footer />
 
       {modal && (
-        <Modal type={modal} onClose={closeModal} onSwitch={switchModal} />
+        <Modal
+          type={modal}
+          onClose={closeModal}
+          onSwitch={switchModal}
+          onSuccess={handleAuthSuccess}
+        />
       )}
     </>
   );
